@@ -40,7 +40,6 @@ Name: "desktopicon"; Description: "Створити ярлик на робочо
 
 [Files]
 Source: "LockScreenSync.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "LockScreenSync.exe.manifest"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 ; Меню Пуск

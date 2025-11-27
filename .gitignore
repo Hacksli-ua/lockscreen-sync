@@ -1,0 +1,15 @@
+# Compiled binaries
+*.exe
+*.syso
+
+# Installer output
+installer/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db

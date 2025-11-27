@@ -1,0 +1,56 @@
+{
+  "RT_GROUP_ICON": {
+    "APP": {
+      "0000": [
+        "icon.png"
+      ]
+    }
+  },
+  "RT_MANIFEST": {
+    "#1": {
+      "0409": {
+        "identity": {
+          "name": "LockScreenSync",
+          "version": "1.0.0.0"
+        },
+        "description": "LockScreen Wallpaper Sync",
+        "minimum-os": "win7",
+        "execution-level": "requireAdministrator",
+        "ui-access": false,
+        "auto-elevate": false,
+        "dpi-awareness": "system",
+        "disable-theming": false,
+        "disable-window-filtering": false,
+        "high-resolution-scrolling-aware": false,
+        "ultra-high-resolution-scrolling-aware": false,
+        "long-path-aware": false,
+        "printer-driver-isolation": false,
+        "gdi-scaling": false,
+        "segment-heap": false,
+        "use-common-controls-v6": false
+      }
+    }
+  },
+  "RT_VERSION": {
+    "#1": {
+      "0000": {
+        "fixed": {
+          "file_version": "1.0.0.0",
+          "product_version": "1.0.0.0"
+        },
+        "info": {
+          "0409": {
+            "CompanyName": "LockScreen Sync",
+            "FileDescription": "LockScreen Wallpaper Sync",
+            "FileVersion": "1.0.0.0",
+            "InternalName": "LockScreenSync",
+            "LegalCopyright": "© 2024",
+            "OriginalFilename": "LockScreenSync.exe",
+            "ProductName": "LockScreen Sync",
+            "ProductVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  }
+}

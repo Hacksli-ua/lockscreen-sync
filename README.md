@@ -73,9 +73,6 @@ go mod tidy
 # Зібрати exe
 go build -ldflags="-H windowsgui -s -w" -o LockScreenSync.exe .
 
-# Створити іконку (опціонально)
-go run tools/png2ico.go
-
 # Зібрати інсталятор
 "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup.iss
 ```
@@ -96,13 +93,6 @@ lockscreen-sync/
 ├── icon.png                # PNG версія іконки
 ├── build.bat               # Скрипт збірки exe
 ├── build_installer.bat     # Скрипт збірки інсталятора
-├── LockScreenSync.exe      # Скомпільована програма
-├── winres/                 # Ресурси Windows
-│   ├── winres.json
-│   └── icon.png
-├── tools/                  # Допоміжні утиліти
-│   ├── create_icon.go
-│   └── png2ico.go
 └── installer/
     └── LockScreenSync_Setup.exe  # Готовий інсталятор
 ```

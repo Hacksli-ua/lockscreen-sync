@@ -78,58 +78,28 @@ end;
 procedure CreateScheduledTask(ExePath: String);
 var
   ResultCode: Integer;
-  TaskXML: String;
-  TempFile: String;
 begin
-  TempFile := ExpandConstant('{tmp}\LockScreenSyncTask.xml');
-
-  TaskXML := '<?xml version="1.0" encoding="UTF-16"?>' + #13#10 +
-    '<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">' + #13#10 +
-    '  <RegistrationInfo>' + #13#10 +
-    '    <Description>LockScreen Sync - синхронізація шпалер з екраном блокування</Description>' + #13#10 +
-    '  </RegistrationInfo>' + #13#10 +
-    '  <Triggers>' + #13#10 +
-    '    <LogonTrigger>' + #13#10 +
-    '      <Enabled>true</Enabled>' + #13#10 +
-    '    </LogonTrigger>' + #13#10 +
-    '  </Triggers>' + #13#10 +
-    '  <Principals>' + #13#10 +
-    '    <Principal id="Author">' + #13#10 +
-    '      <LogonType>InteractiveToken</LogonType>' + #13#10 +
-    '      <RunLevel>HighestAvailable</RunLevel>' + #13#10 +
-    '    </Principal>' + #13#10 +
-    '  </Principals>' + #13#10 +
-    '  <Settings>' + #13#10 +
-    '    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>' + #13#10 +
-    '    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>' + #13#10 +
-    '    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>' + #13#10 +
-    '    <AllowHardTerminate>true</AllowHardTerminate>' + #13#10 +
-    '    <StartWhenAvailable>true</StartWhenAvailable>' + #13#10 +
-    '    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>' + #13#10 +
-    '    <AllowStartOnDemand>true</AllowStartOnDemand>' + #13#10 +
-    '    <Enabled>true</Enabled>' + #13#10 +
-    '    <Hidden>false</Hidden>' + #13#10 +
-    '    <RunOnlyIfIdle>false</RunOnlyIfIdle>' + #13#10 +
-    '    <WakeToRun>false</WakeToRun>' + #13#10 +
-    '    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>' + #13#10 +
-    '    <Priority>7</Priority>' + #13#10 +
-    '  </Settings>' + #13#10 +
-    '  <Actions Context="Author">' + #13#10 +
-    '    <Exec>' + #13#10 +
-    '      <Command>' + ExePath + '</Command>' + #13#10 +
-    '    </Exec>' + #13#10 +
-    '  </Actions>' + #13#10 +
-    '</Task>';
-
-  SaveStringToFile(TempFile, TaskXML, False);
-
   // Видаляємо старе завдання якщо існує
   Exec('schtasks', '/Delete /TN "LockScreenSync" /F', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
 
-  // Створюємо нове завдання
-  Exec('schtasks', '/Create /TN "LockScreenSync" /XML "' + TempFile + '"', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  // Створюємо нове завдання з правами адміністратора
+  // /SC ONLOGON - запуск при вході користувача
+  // /RL HIGHEST - запуск з найвищими правами (адмін якщо користувач адмін)
+  // /IT - інтерактивний режим (потрібен для системного трею)
+  // /DELAY 0000:30 - затримка 30 секунд для стабільності
+  Exec('schtasks', '/Create /TN "LockScreenSync" /TR "\"' + ExePath + '\"" /SC ONLOGON /RL HIGHEST /IT /DELAY 0000:30 /F', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
 
-  DeleteFile(TempFile);
+  // Якщо не вдалося з /IT (старіші версії Windows), спробуємо без нього
+  if ResultCode <> 0 then
+  begin
+    Exec('schtasks', '/Create /TN "LockScreenSync" /TR "\"' + ExePath + '\"" /SC ONLOGON /RL HIGHEST /DELAY 0000:30 /F', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  end;
+
+  // Якщо і це не спрацювало, спробуємо базову версію
+  if ResultCode <> 0 then
+  begin
+    Exec('schtasks', '/Create /TN "LockScreenSync" /TR "\"' + ExePath + '\"" /SC ONLOGON /RL HIGHEST /F', '', SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  end;
 end;
 
 // Видалити завдання Task Scheduler
